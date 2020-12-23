@@ -33,6 +33,7 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
     private JdbcTemplate template;
 
     public class UserModelRowMapper implements RowMapper<UserModel> {
+
         @Override
         public UserModel mapRow(ResultSet rs, int i) throws SQLException {
             return new UserModel(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("patronumic"));
@@ -61,7 +62,7 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
 
     @Override
     public void delete(UserModel item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        template.update(DELETE_SQL_TEXT, item.getId());
     }
 
     @PostConstruct
