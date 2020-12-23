@@ -16,7 +16,7 @@ public class RestController {
     @GetMapping(path = "/test")
     public String test() {
         log.info("test");
-        UserModel user = userDao.findById(1L).get();
+        UserModel user = userDao.add(new UserModel(null, "test", "test", "test"));
         log.info("res = {}", user);
         userDao.delete(user);
         return "test";

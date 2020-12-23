@@ -1,6 +1,7 @@
 package app.dao;
 
 import app.model.UserModel;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,13 +27,36 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
     private static final String GET_BY_ID_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user where id = ?";
     private static final String GET_LIST_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user limit ? offset ?";
     private static final String GET_ALL_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user order by id";
-    private static final String UPDATE_SQL_TEXT = "update t_users(first_name, last_name, patronumic) values(?,?,?) where id = ?";
+    private static final String UPDATE_SQL_TEXT = "update t_user set first_name = ?, last_name = ?, patronumic = ? where id = ?";
     private static final String DELETE_SQL_TEXT = "delete from t_user where id = ?";
+    private static final String INSERT_SQL_TEXT = "insert into t_user(first_name, last_name, patronumic) values(?,?,?)";
 
     @Autowired
     private DataSource dataSource;
 
     private JdbcTemplate template;
+
+    @Override
+    public UserModel add(UserModel item) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(INSERT_SQL_TEXT);
+            ps.setString(1, item.getFirstName());
+            ps.setString(2, item.getLastName());
+            ps.setString(3, item.getPatrinumic());
+            return ps;
+        }, keyHolder);
+        item.setId((long) keyHolder.getKey());
+        return item;
+
+//        int resupd = template.update(INSERT_SQL_TEXT, item.getFirstName(), item.getLastName(), item.getPatrinumic());
+//        if (resupd == 1) {
+//            return findById();
+//        } else {
+//            return null;
+//        }
+    }
 
     public class UserModelRowMapper implements RowMapper<UserModel> {
 

@@ -6,6 +6,8 @@ import java.util.Optional;
 /**
  *
  * @author vasil
+ * @param <T>
+ * @param <K>
  */
 public interface DaoInterface<T, K> {
 
@@ -15,6 +17,8 @@ public interface DaoInterface<T, K> {
 
     public List<T> getAllList();
 
+    public T add(T item);
+    
     public T update(T item);
 
     public void delete(T item);
