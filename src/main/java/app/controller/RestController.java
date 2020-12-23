@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.repository.UserModelRepository;
+import app.dao.UserModelDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RestController {
 
     @Autowired
-    UserModelRepository userRepository;
+    UserModelDao userDao;
     
     @GetMapping(path = "/test")
     public String test() {
-        userRepository.findAll();
         log.info("test");
+        log.info("res = {}",userDao.getItemList(2, 0));
         return "test";
     }
 }
