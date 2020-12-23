@@ -24,7 +24,7 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
     private static final String GET_BY_ID_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user where id = ?";
     private static final String GET_LIST_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user limit ? offset ?";
     private static final String GET_ALL_SQL_TEXT = "select id, first_name, last_name, patronumic from t_user order by id";
-    private static final String UPDATE_SQL_TEXT = "";
+    private static final String UPDATE_SQL_TEXT = "update t_users(first_name, last_name, patronumic) values(?,?,?) where id = ?";
     private static final String DELETE_SQL_TEXT = "delete from t_user where id = ?";
 
     @Autowired
@@ -57,7 +57,12 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
 
     @Override
     public UserModel update(UserModel item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int resupd = template.update(UPDATE_SQL_TEXT, item.getFirstName(), item.getLastName(), item.getPatrinumic(), item.getId());
+        if (resupd == 1) {
+            return item;
+        } else {
+            return null;
+        }
     }
 
     @Override
