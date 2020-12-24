@@ -5,13 +5,19 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author vasil
  */
-@Data
+@Getter
+@AllArgsConstructor
+@ToString
+@Slf4j
 public class Account implements Serializable {
 
     private Long id;
@@ -25,4 +31,22 @@ public class Account implements Serializable {
     @JsonProperty("balance")
     private BigDecimal balance = new BigDecimal(0);
 
+    /**
+     *
+     * @param operType
+     * @param sum
+     */
+    public synchronized void ubpBalance(BalanceOperType operType, BigDecimal sum) {
+        switch (operType) {
+            case DECREACE:
+                log.info("Уменьшение баланса");
+                balance = balance.subtract(sum);
+                break;
+            case INCREASE:
+                log.info("Увеличение баланса");
+                balance.add(sum);
+                break;
+        }
+
+    }
 }

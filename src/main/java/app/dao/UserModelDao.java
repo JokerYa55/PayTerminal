@@ -36,6 +36,14 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
 
     private JdbcTemplate template;
 
+    public class UserModelRowMapper implements RowMapper<UserModel> {
+
+        @Override
+        public UserModel mapRow(ResultSet rs, int i) throws SQLException {
+            return new UserModel(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("patronumic"));
+        }
+    }
+
     @Override
     public UserModel add(UserModel item) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -48,14 +56,6 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
         }, keyHolder);
         log.info("res = {}", res);
         return findById((long) keyHolder.getKey()).get();
-    }
-
-    public class UserModelRowMapper implements RowMapper<UserModel> {
-
-        @Override
-        public UserModel mapRow(ResultSet rs, int i) throws SQLException {
-            return new UserModel(rs.getLong("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("patronumic"));
-        }
     }
 
     @Override
