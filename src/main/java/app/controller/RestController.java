@@ -18,7 +18,7 @@ public class RestController {
         log.info("test");
         UserModel user = userDao.add(new UserModel(null, "test", "test", "test"));
         log.info("res = {}", user);
-        userDao.delete(user);
+        //userDao.delete(user);
         return "test";
     }
 }

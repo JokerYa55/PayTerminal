@@ -39,23 +39,15 @@ public class UserModelDao implements DaoInterface<UserModel, Long> {
     @Override
     public UserModel add(UserModel item) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(connection -> {
-            PreparedStatement ps = connection
-                    .prepareStatement(INSERT_SQL_TEXT);
+        int res = template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL_TEXT, new String[]{"id"});
             ps.setString(1, item.getFirstName());
             ps.setString(2, item.getLastName());
             ps.setString(3, item.getPatrinumic());
             return ps;
         }, keyHolder);
-        item.setId((long) keyHolder.getKey());
-        return item;
-
-//        int resupd = template.update(INSERT_SQL_TEXT, item.getFirstName(), item.getLastName(), item.getPatrinumic());
-//        if (resupd == 1) {
-//            return findById();
-//        } else {
-//            return null;
-//        }
+        log.info("res = {}", res);
+        return findById((long) keyHolder.getKey()).get();
     }
 
     public class UserModelRowMapper implements RowMapper<UserModel> {
